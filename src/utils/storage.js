@@ -34,6 +34,11 @@ export function getPosts() {
   }
 }
 
+export function deletePost(id) {
+  const posts = getPosts().filter(p => p.id !== id)
+  localStorage.setItem(KEY, JSON.stringify(posts))
+}
+
 export function savePost({ photos, comment, tags, privacy }) {
   const posts = getPosts()
   const now = new Date()

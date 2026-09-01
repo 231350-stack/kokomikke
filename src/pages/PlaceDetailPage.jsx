@@ -1,16 +1,22 @@
 import { useState, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ChevronLeft, Heart, Bookmark } from 'lucide-react'
-import { isLiked, toggleLike } from '../utils/storage'
+import { ChevronLeft, Heart, Bookmark, Trash2 } from 'lucide-react'
+import { isLiked, toggleLike, deletePost } from '../utils/storage'
 
 export default function PlaceDetailPage() {
   const navigate = useNavigate()
   const { state } = useLocation()
   const result = state?.result
 
-  /* ── いいね・ブックマーク ── */
-  const [liked,      setLiked]      = useState(() => isLiked(result?.id))
-  const [bookmarked, setBookmarked] = useState(false)
+  /* ── いいね・ブックマーク・削除確認 ── */
+  const [liked,          setLiked]         = useState(() => isLiked(result?.id))
+  const [bookmarked,     setBookmarked]    = useState(false)
+  const [confirmDelete,  setConfirmDelete] = useState(false)
+
+  const handleDelete = () => {
+    deletePost(result.id)
+    navigate(-1)
+  }
 
   const baseCount = result?.likes ?? 32
   const likeCount = liked ? baseCount + 1 : baseCount
@@ -111,6 +117,105 @@ export default function PlaceDetailPage() {
       >
         <ChevronLeft size={26} color="white" strokeWidth={2.2} />
       </button>
+
+      {/* 削除ボタン（自分の投稿のみ） */}
+      {result?.isUserPost && (
+        <button
+          onClick={() => setConfirmDelete(true)}
+          className="absolute flex items-center justify-center"
+          style={{
+            top:             'calc(env(safe-area-inset-top, 44px) + 10px)',
+            right:           '16px',
+            width:           '36px',
+            height:          '36px',
+            zIndex:          10,
+            borderRadius:    '50%',
+            backgroundColor: 'rgba(0,0,0,0.28)',
+            border:          'none',
+            cursor:          'pointer',
+          }}
+          aria-label="削除"
+        >
+          <Trash2 size={17} color="white" strokeWidth={2} />
+        </button>
+      )}
+
+      {/* 削除確認シート */}
+      {confirmDelete && (
+        <div
+          style={{
+            position:        'fixed',
+            inset:           0,
+            zIndex:          200,
+            display:         'flex',
+            flexDirection:   'column',
+            justifyContent:  'flex-end',
+          }}
+        >
+          {/* 背景オーバーレイ */}
+          <div
+            style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)' }}
+            onClick={() => setConfirmDelete(false)}
+          />
+
+          {/* シート本体 */}
+          <div
+            style={{
+              position:        'relative',
+              backgroundColor: '#fff',
+              borderRadius:    '24px 24px 0 0',
+              padding:         '28px 20px',
+              paddingBottom:   'calc(env(safe-area-inset-bottom, 0px) + 24px)',
+              display:         'flex',
+              flexDirection:   'column',
+              gap:             '12px',
+            }}
+          >
+            <p style={{ fontSize: '17px', fontWeight: 700, color: '#1a1a1a', textAlign: 'center' }}>
+              この記録を削除しますか？
+            </p>
+            <p style={{ fontSize: '13px', color: '#999', textAlign: 'center', lineHeight: 1.6 }}>
+              削除すると元に戻せません。
+            </p>
+
+            <button
+              onClick={handleDelete}
+              style={{
+                marginTop:       '4px',
+                width:           '100%',
+                padding:         '15px',
+                borderRadius:    '999px',
+                backgroundColor: '#d94040',
+                color:           '#fff',
+                fontSize:        '16px',
+                fontWeight:      700,
+                border:          'none',
+                cursor:          'pointer',
+                boxShadow:       '0 4px 14px rgba(200,40,40,0.30)',
+              }}
+            >
+              削除する
+            </button>
+
+            <button
+              onClick={() => setConfirmDelete(false)}
+              style={{
+                width:           '100%',
+                padding:         '15px',
+                borderRadius:    '999px',
+                backgroundColor: '#f0f0ec',
+                color:           '#555',
+                fontSize:        '16px',
+                fontWeight:      600,
+                border:          'none',
+                cursor:          'pointer',
+              }}
+            >
+              キャンセル
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── 白いカード ── */}
       <div
