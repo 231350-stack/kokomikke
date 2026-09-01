@@ -32,6 +32,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 
+/* 地図タイルのみ淡くする（ピン・UIには影響しない） */
+.leaflet-tile-pane {
+  filter: brightness(1.12) saturate(0.38);
+}
+
 /* 地図ピンのグロウアニメーション */
 @keyframes glowPulse {
   0%, 100% { opacity: 0.75; transform: scale(1); }
