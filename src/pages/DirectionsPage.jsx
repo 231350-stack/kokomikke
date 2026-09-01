@@ -97,7 +97,7 @@ export default function DirectionsPage() {
           dragging={false}
         >
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
           {/* 現在地 → 目的地：点線ルート */}

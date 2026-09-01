@@ -52,7 +52,7 @@ export default function SearchResultsPage() {
           dragging={false}
         >
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           {CLUSTERS.map(c => (
             <Marker key={c.id} position={c.pos} icon={clusterIcon(c.count)} />

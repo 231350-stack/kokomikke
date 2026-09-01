@@ -50,7 +50,7 @@ export default function MapPage() {
           scrollWheelZoom
         >
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
           {/* PLACES から発見ピンを生成 */}

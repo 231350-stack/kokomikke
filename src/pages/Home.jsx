@@ -76,7 +76,7 @@ export default function Home() {
           scrollWheelZoom
         >
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
           {/* 地図タップ → 選択解除 */}
