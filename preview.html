@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOKOMIKKE — 画面一覧</title>
+  <style>
+    /* ── 共通変数 ── */
+    :root {
+      --sage-100: #e4ede5;
+      --sage-300: #a2c0a5;
+      --sage-400: #7a9e7e;
+      --app-bg:   #f0f0ec;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: #d8d8d4;
+      padding: 32px;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #444;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #888;
+      letter-spacing: 0.06em;
+      margin-bottom: 28px;
+    }
+
+    /* ── ギャラリー ── */
+    .gallery {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .screen-col {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .screen-label {
+      font-size: 12px;
+      color: #666;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+
+    /* ── フォン枠 ── */
+    .phone {
+      width: 375px;
+      height: 812px;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow:
+        0 0 0 8px #1c1c1e,
+        0 0 0 10px #3a3a3c,
+        0 24px 64px rgba(0,0,0,0.4);
+      background: var(--app-bg);
+    }
+
+    /* ── タブバー（共通） ── */
+    .tab-bar {
+      flex-shrink: 0;
+      height: 60px;
+      background: #fff;
+      border-top: 1px solid #ebebeb;
+      display: flex;
+    }
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #bbb;
+      cursor: pointer;
+    }
+    .tab-item.active { color: var(--sage-400); }
+    .tab-icon {
+      width: 22px; height: 22px;
+      stroke: currentColor; fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+      stroke-width: 1.5;
+    }
+    .tab-item.active .tab-icon { stroke-width: 2; }
+
+    /* ─────────────────────────────────────
+       1. カメラ画面
+    ───────────────────────────────────── */
+    .camera-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+    }
+    .camera-preview {
+      flex: 1;
+      position: relative;
+      background: linear-gradient(155deg, #1a1a2e 0%, #0f3460 100%);
+    }
+    .camera-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    }
+    .cam-btn {
+      position: absolute;
+      top: calc(44px + 16px);
+      width: 40px; height: 40px;
+      background: rgba(0,0,0,0.38);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cam-btn svg {
+      width: 20px; height: 20px;
+      stroke: #fff; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .cam-btn-close   { left: 16px; }
+    .cam-btn-switch  { right: 16px; }
+    .camera-bottom {
+      flex-shrink: 0;
+      height: 120px;
+      background: rgba(0,0,0,0.82);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+    }
+    .cam-thumbnail {
+      width: 52px; height: 52px;
+      border-radius: 8px;
+      background: #3a3a3c;
+      border: 1px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+    .cam-shutter-wrap {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    .cam-shutter {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .cam-shutter-inner {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .cam-spacer { width: 52px; flex-shrink: 0; }
+
+    /* ─────────────────────────────────────
+       2. コメント・公開範囲
+    ───────────────────────────────────── */
+    .post-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--app-bg);
+      overflow: hidden;
+    }
+    .post-topbar {
+      flex-shrink: 0;
+      padding: 54px 12px 8px;
+    }
+    .btn-back {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer;
+    }
+    .btn-back svg {
+      width: 22px; height: 22px;
+      stroke: #555; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .post-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 20px;
+    }
+    .post-photo-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .post-photo-box {
+      width: 144px; height: 144px;
+      border-radius: 16px;
+      background: #c0b8ac;
+    }
+    .post-input {
+      width: 100%;
+      padding: 16px;
+      background: #fff;
+      border: none;
+      border-radius: 16px;
+      font-size: 14px;
+      color: #bbb;
+      font-family: inherit;
+      margin-bottom: 24px;
+      outline: none;
+    }
+    .section-label {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 12px;
+    }
+    .tag-row {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    .tag-chip {
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #dedad3;
+      color: #555;
+      border: none; cursor: pointer;
+    }
+    .tag-chip.on { background: var(--sage-400); color: #fff; }
+    .tag-add {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #dedad3;
+      border: none; cursor: pointer;
+      font-size: 20px; color: #777;
+      display: flex; align-items: center; justify-content: center;
+      font-family: inherit;
+    }
+    .privacy-row {
+      display: flex; gap: 8px;
+      margin-bottom: 24px;
+    }
+    .privacy-btn {
+      flex: 1;
+      padding: 20px 8px;
+      border-radius: 12px;
+      border: none; cursor: pointer;
+      background: #fff; color: #bbb;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      font-size: 12px;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .privacy-btn.on { background: var(--sage-400); color: #fff; }
+    .privacy-btn svg {
+      width: 24px; height: 24px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .post-bottom {
+      flex-shrink: 0;
+      padding: 16px 20px 32px;
+    }
+    .btn-primary {
+      width: 100%; padding: 16px;
+      background: var(--sage-400); color: #fff;
+      border: none; border-radius: 999px;
+      font-size: 16px; font-weight: 500;
+      font-family: inherit; cursor: pointer;
+    }
+
+    /* ─────────────────────────────────────
+       3. 保存完了
+    ───────────────────────────────────── */
+    .saved-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--app-bg);
+    }
+    .saved-main {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 28px; padding: 32px;
+    }
+    .saved-icon-wrap {
+      position: relative;
+      width: 210px; height: 210px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .saved-circle {
+      width: 150px; height: 150px;
+      border-radius: 50%;
+      background: var(--sage-100);
+      flex-shrink: 0;
+    }
+    .saved-leaf-abs {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .saved-leaf-abs svg {
+      width: 52px; height: 52px;
+      stroke: var(--sage-400); fill: none;
+      stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .sparkle {
+      position: absolute;
+      color: var(--sage-300);
+      line-height: 1; user-select: none;
+    }
+    .saved-text { text-align: center; }
+    .saved-title {
+      font-size: 26px; font-weight: 500;
+      color: #1a1a1a; margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .saved-sub { font-size: 14px; color: #888; line-height: 1.7; }
+    .saved-bottom { padding: 16px 20px 32px; }
+
+    /* ─────────────────────────────────────
+       4. 地図
+    ───────────────────────────────────── */
+    .map-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    /* CartoDB風マップ背景（CSS模倣） */
+    .map-bg {
+      position: absolute; inset: 0;
+      background-color: #f2efe9;
+    }
+    .map-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(160,148,128,0.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(160,148,128,0.25) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .map-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      /* 道路風の横線・縦線 */
+      background-image:
+        linear-gradient(rgba(220,210,195,0.9) 8px, transparent 8px),
+        linear-gradient(90deg, rgba(220,210,195,0.9) 8px, transparent 8px),
+        linear-gradient(rgba(230,222,208,0.7) 4px, transparent 4px),
+        linear-gradient(90deg, rgba(230,222,208,0.7) 4px, transparent 4px);
+      background-size:
+        240px 240px, 300px 300px,
+        120px 120px, 180px 180px;
+      background-position:
+        0 80px, 60px 0,
+        30px 140px, 100px 40px;
+    }
+    /* 光るピン */
+    .glowing-pin {
+      position: absolute;
+      top: 42%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .pin-outer-glow {
+      position: absolute;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(122,158,126,0.28) 0%, transparent 70%);
+      top: -50px; left: -50px;
+      animation: glowPulse 2.4s ease-in-out infinite;
+    }
+    .pin-ring {
+      position: absolute;
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(122,158,126,0.5);
+      top: -32px; left: -32px;
+      animation: ringExpand 2.4s ease-out infinite;
+    }
+    .pin-inner-glow {
+      position: absolute;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(122,158,126,0.35) 0%, transparent 70%);
+      top: -26px; left: -26px;
+    }
+    /* 場所カード */
+    .map-card {
+      position: absolute;
+      left: 16px; right: 16px; bottom: 16px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+      z-index: 20;
+      cursor: pointer;
+    }
+    .map-card-thumb {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      background: #c0b8ac;
+      flex-shrink: 0;
+    }
+    .map-card-text { flex: 1; }
+    .map-card-title { font-size: 15px; font-weight: 500; color: #1a1a1a; line-height: 1.3; }
+    .map-card-sub { font-size: 12px; color: #bbb; margin-top: 4px; }
+    .map-card-chevron svg {
+      width: 18px; height: 18px;
+      stroke: #ccc; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ─────────────────────────────────────
+       5. 図鑑
+    ───────────────────────────────────── */
+    .enc-screen {
+      flex: 1;
+      display: flex; flex-direction: column;
+      background: var(--app-bg);
+      overflow: hidden;
+    }
+    .enc-header {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      gap: 2px;
+      padding: 11px 0;
+    }
+    .enc-header-title {
+      font-size: 15px; font-weight: 500;
+      color: #333; letter-spacing: 0.1em;
+    }
+    .enc-header svg {
+      width: 14px; height: 14px;
+      stroke: #555; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+      margin-top: 2px;
+    }
+    .enc-notebook-wrap {
+      flex: 1; min-height: 0;
+      padding: 0 12px 12px;
+    }
+    .enc-notebook {
+      width: 100%; height: 100%;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #f4f0e5;
+      box-shadow: 0 2px 6px rgba(100,80,40,0.08), 0 8px 28px rgba(100,80,40,0.13);
+      position: relative;
+    }
+    /* 左ページ */
+    .enc-left-page {
+      position: absolute; inset: 0;
+      background: #f4f0e5;
+    }
+    /* めくり中の左ページ影 */
+    .enc-left-shadow {
+      position: absolute;
+      top: 0; bottom: 0; left: 48px; right: 0;
+      background: linear-gradient(to right, rgba(80,60,20,0.22) 0%, rgba(80,60,20,0.06) 30%, transparent 70%);
+      pointer-events: none;
+      z-index: 8;
+      opacity: 0;
+      transition: opacity 0.85s cubic-bezier(0.4,0,0.2,1);
+    }
+    .enc-left-shadow.visible { opacity: 1; }
+    /* バインダー帯 */
+    .enc-binder {
+      position: absolute; top: 0; bottom: 0; left: 0;
+      width: 48px;
+      background: #e6e0d2;
+      z-index: 5;
+    }
+    /* スパイラルリング */
+    .enc-rings {
+      position: absolute; top: 0; bottom: 0; left: 0;
+      width: 48px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: space-evenly;
+      padding: 20px 0;
+      z-index: 10;
+    }
+    .enc-ring {
+      width: 20px; height: 22px;
+      border-radius: 50%;
+      border: 2.5px solid #6a5e44;
+      background: transparent;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    /* 右ページ（ページめくり） */
+    .enc-right-page {
+      position: absolute; inset: 0;
+      margin-left: 48px;
+      background: #f8f4eb;
+      transform-origin: left center;
+      transform: perspective(1400px) rotateY(0deg);
+      transition: transform 0.85s cubic-bezier(0.4,0,0.2,1);
+    }
+    .enc-right-page.closed {
+      transform: perspective(1400px) rotateY(-72deg);
+    }
+    /* 右ページ左端の影（奥行き） */
+    .enc-right-inner-shadow {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(100,80,40,0.09) 0%, transparent 18%);
+      pointer-events: none; z-index: 1;
+    }
+    /* 右ページコンテンツ */
+    .enc-right-content {
+      position: relative; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 28px 20px 20px; gap: 16px;
+      z-index: 2;
+    }
+    /* ポラロイド */
+    .enc-polaroid-wrap {
+      position: relative;
+      margin-top: 16px;
+      transform: rotate(-2deg);
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97) rotate(-2deg);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .enc-polaroid-wrap.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(-2deg);
+    }
+    .enc-washi {
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%);
+      width: 48px; height: 16px;
+      background: rgba(122,158,126,0.55);
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .enc-polaroid {
+      background: #fff;
+      padding: 10px;
+      padding-bottom: 32px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .enc-photo {
+      width: 172px; height: 172px;
+      background: #c0baaf;
+    }
+    /* テキスト */
+    .enc-text-block {
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.4s ease 0.12s;
+    }
+    .enc-text-block.visible { opacity: 1; }
+    .enc-place {
+      font-size: 18px;
+      color: #3e3628;
+      font-family: 'Hiragino Mincho ProN', 'YuMincho', 'Yu Mincho', Georgia, serif;
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+    }
+    .enc-time {
+      font-size: 13px; color: #9a9490;
+      margin-top: 8px; letter-spacing: 0.02em;
+    }
+
+    /* ── アニメーション ── */
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50%       { opacity: 0.35; transform: scale(1.25); }
+    }
+    @keyframes ringExpand {
+      0%   { opacity: 0.6; transform: scale(0.7); }
+      100% { opacity: 0;   transform: scale(2.2); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>KOKOMIKKE — 画面一覧</h1>
+<div class="subtitle">発信者側フロー（実装済み）</div>
+
+<div class="gallery">
+
+  <!-- ══════════════════════════════════
+       1. カメラ
+  ════════════════════════════════════ -->
+  <div class="screen-col">
+    <div class="screen-label">1. カメラ</div>
+    <div class="phone" style="background:#000">
+      <div class="camera-screen">
+
+        <!-- プレビュー（擬似） -->
+        <div class="camera-preview">
+          <!-- 閉じる -->
+          <button class="cam-btn cam-btn-close">
+            <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+          <!-- カメラ切替 -->
+          <button class="cam-btn cam-btn-switch">
+            <svg viewBox="0 0 24 24">
+              <path d="M20 7h-3.5l-1.5-2h-6L7.5 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="13" r="3"/>
+              <path d="M14.5 9.5L16 8l1.5 1.5M9.5 16.5L8 18l-1.5-1.5"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 下部バー -->
+        <div class="camera-bottom">
+          <div class="cam-thumbnail"></div>
+          <div class="cam-shutter-wrap">
+            <div class="cam-shutter">
+              <div class="cam-shutter-inner"></div>
+            </div>
+          </div>
+          <div class="cam-spacer"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       2. コメント・公開範囲
+  ════════════════════════════════════ -->
+  <div class="screen-col">
+    <div class="screen-label">2. コメント・公開範囲</div>
+    <div class="phone">
+      <div class="post-screen">
+
+        <!-- 戻るボタン -->
+        <div class="post-topbar">
+          <button class="btn-back">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+        </div>
+
+        <!-- スクロールエリア -->
+        <div class="post-scroll">
+          <!-- 写真プレビュー -->
+          <div class="post-photo-row">
+            <div class="post-photo-box"></div>
+          </div>
+          <!-- コメント -->
+          <div class="post-input" style="margin-bottom:24px; color:#bbb;">一言コメントを入力</div>
+
+          <!-- タグ -->
+          <div class="section-label">タグを選ぶ</div>
+          <div class="tag-row">
+            <button class="tag-chip on">自然</button>
+            <button class="tag-chip">散歩道</button>
+            <button class="tag-chip">景色</button>
+            <button class="tag-add">+</button>
+          </div>
+
+          <!-- 公開範囲 -->
+          <div class="section-label">公開範囲</div>
+          <div class="privacy-row">
+            <button class="privacy-btn on">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>自分だけ</span>
+            </button>
+            <button class="privacy-btn">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>フォロワー</span>
+            </button>
+            <button class="privacy-btn">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span>みんな</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 保存ボタン -->
+        <div class="post-bottom">
+          <button class="btn-primary">保存する</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       3. 保存完了
+  ════════════════════════════════════ -->
+  <div class="screen-col">
+    <div class="screen-label">3. 保存完了</div>
+    <div class="phone">
+      <div class="saved-screen">
+
+        <!-- メインコンテンツ -->
+        <div class="saved-main">
+          <!-- アイコンエリア -->
+          <div class="saved-icon-wrap">
+            <div class="saved-circle"></div>
+            <div class="saved-leaf-abs">
+              <svg viewBox="0 0 24 24">
+                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+                <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+              </svg>
+            </div>
+            <!-- スパークル -->
+            <span class="sparkle" style="top:20px;right:16px;font-size:20px">✦</span>
+            <span class="sparkle" style="top:52px;right:2px;font-size:12px">✦</span>
+            <span class="sparkle" style="bottom:28px;left:10px;font-size:16px">✦</span>
+            <span class="sparkle" style="bottom:12px;left:48px;font-size:10px">✦</span>
+          </div>
+
+          <!-- テキスト -->
+          <div class="saved-text">
+            <div class="saved-title">保存しました</div>
+            <div class="saved-sub">あなたの地図に<br>新しい発見が加わりました</div>
+          </div>
+        </div>
+
+        <!-- ボタン -->
+        <div class="saved-bottom">
+          <button class="btn-primary">地図で見る</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       4. 地図に灯る
+  ════════════════════════════════════ -->
+  <div class="screen-col">
+    <div class="screen-label">4. 地図に灯る</div>
+    <div class="phone">
+
+      <!-- 地図エリア -->
+      <div class="map-area">
+        <!-- 背景（CartoDB Positron風） -->
+        <div class="map-bg"></div>
+
+        <!-- 光るピン -->
+        <div class="glowing-pin">
+          <div class="pin-outer-glow"></div>
+          <div class="pin-ring"></div>
+          <div class="pin-inner-glow"></div>
+          <svg viewBox="0 0 24 30" width="34" height="44"
+               style="position:absolute; left:-17px; top:-44px" aria-hidden="true">
+            <path d="M12 0C7.58 0 4 3.58 4 8c0 5.5 8 20 8 20s8-14.5 8-20c0-4.42-3.58-8-8-8z"
+                  fill="#7a9e7e"/>
+            <circle cx="12" cy="8.5" r="3.2" fill="white"/>
+          </svg>
+        </div>
+
+        <!-- 場所カード -->
+        <div class="map-card">
+          <div class="map-card-thumb"></div>
+          <div class="map-card-text">
+            <div class="map-card-title">森の散歩道</div>
+            <div class="map-card-sub">たった今</div>
+          </div>
+          <div class="map-card-chevron">
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- タブバー（地図がアクティブ） -->
+      <div class="tab-bar">
+        <div class="tab-item">
+          <svg class="tab-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>ホーム</span>
+        </div>
+        <div class="tab-item active">
+          <svg class="tab-icon" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          <span>地図</span>
+        </div>
+        <div class="tab-item">
+          <svg class="tab-icon" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+          <span>図鑑</span>
+        </div>
+        <div class="tab-item">
+          <svg class="tab-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>プロフィール</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       5. 図鑑に追加される
+  ════════════════════════════════════ -->
+  <div class="screen-col">
+    <div class="screen-label">5. 図鑑に追加される</div>
+    <div class="phone">
+
+      <!-- 図鑑エリア -->
+      <div class="enc-screen">
+
+        <!-- ヘッダー -->
+        <div class="enc-header">
+          <span class="enc-header-title">図鑑</span>
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+
+        <!-- ノートブック -->
+        <div class="enc-notebook-wrap">
+          <div class="enc-notebook">
+            <!-- 左ページ -->
+            <div class="enc-left-page"></div>
+
+            <!-- めくり中の左ページ影（JSでアニメーション） -->
+            <div class="enc-left-shadow" id="enc-left-shadow"></div>
+
+            <!-- バインダー帯 -->
+            <div class="enc-binder"></div>
+
+            <!-- スパイラルリング（14個） -->
+            <div class="enc-rings">
+              <div class="enc-ring"></div><div class="enc-ring"></div>
+              <div class="enc-ring"></div><div class="enc-ring"></div>
+              <div class="enc-ring"></div><div class="enc-ring"></div>
+              <div class="enc-ring"></div><div class="enc-ring"></div>
+              <div class="enc-ring"></div><div class="enc-ring"></div>
+              <div class="enc-ring"></div><div class="enc-ring"></div>
+              <div class="enc-ring"></div><div class="enc-ring"></div>
+            </div>
+
+            <!-- 右ページ（ページめくり） -->
+            <div class="enc-right-page closed" id="enc-right-page">
+              <div class="enc-right-inner-shadow"></div>
+              <div class="enc-right-content">
+
+                <!-- ポラロイド写真 -->
+                <div class="enc-polaroid-wrap" id="enc-polaroid">
+                  <div class="enc-washi"></div>
+                  <div class="enc-polaroid">
+                    <div class="enc-photo"></div>
+                  </div>
+                </div>
+
+                <!-- テキスト -->
+                <div class="enc-text-block" id="enc-text">
+                  <div class="enc-place">森の散歩道</div>
+                  <div class="enc-time">たった今</div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- タブバー（図鑑がアクティブ） -->
+      <div class="tab-bar">
+        <div class="tab-item">
+          <svg class="tab-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>ホーム</span>
+        </div>
+        <div class="tab-item">
+          <svg class="tab-icon" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          <span>地図</span>
+        </div>
+        <div class="tab-item active">
+          <svg class="tab-icon" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+          <span>図鑑</span>
+        </div>
+        <div class="tab-item">
+          <svg class="tab-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>プロフィール</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /gallery -->
+
+<script>
+  // 図鑑：ページめくりアニメーション（Reactと同じタイミング）
+  const rightPage  = document.getElementById('enc-right-page')
+  const leftShadow = document.getElementById('enc-left-shadow')
+  const polaroid   = document.getElementById('enc-polaroid')
+  const encText    = document.getElementById('enc-text')
+
+  // 初期状態：影あり・ページ閉じ
+  leftShadow.classList.add('visible')
+
+  // 160ms後：ページめくり開始
+  setTimeout(() => {
+    rightPage.classList.remove('closed')
+    leftShadow.classList.remove('visible')
+  }, 160)
+
+  // 920ms後：コンテンツ表示
+  setTimeout(() => {
+    polaroid.classList.add('visible')
+    encText.classList.add('visible')
+  }, 920)
+</script>
+
+</body>
+</html>
