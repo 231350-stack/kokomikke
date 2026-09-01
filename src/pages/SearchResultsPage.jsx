@@ -12,7 +12,7 @@ const clusterIcon = (count) =>
   L.divIcon({
     html: `<div style="
       width:36px;height:36px;border-radius:50%;
-      background:#7a9e7e;color:#fff;
+      background:#ff6429;color:#fff;
       font-size:13px;font-weight:600;
       display:flex;align-items:center;justify-content:center;
       font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;

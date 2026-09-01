@@ -13,7 +13,7 @@ const USER_POS       = [35.325, 139.545]
 /* 通常ピン */
 const pinIcon = L.divIcon({
   html: `<svg viewBox="0 0 24 30" width="30" height="38" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 0C7.58 0 4 3.58 4 8c0 5.5 8 20 8 20s8-14.5 8-20c0-4.42-3.58-8-8-8z" fill="#7a9e7e"/>
+    <path d="M12 0C7.58 0 4 3.58 4 8c0 5.5 8 20 8 20s8-14.5 8-20c0-4.42-3.58-8-8-8z" fill="#ff6429"/>
     <circle cx="12" cy="8.5" r="3.2" fill="white"/>
   </svg>`,
   className:  '',
@@ -21,11 +21,11 @@ const pinIcon = L.divIcon({
   iconAnchor: [15, 38],
 })
 
-/* 選択中ピン（大きく・濃い緑） */
+/* 選択中ピン（大きく・濃いオレンジ） */
 const selectedPinIcon = L.divIcon({
   html: `<svg viewBox="0 0 24 30" width="38" height="48" xmlns="http://www.w3.org/2000/svg">
     <filter id="s"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.35"/></filter>
-    <path d="M12 0C7.58 0 4 3.58 4 8c0 5.5 8 20 8 20s8-14.5 8-20c0-4.42-3.58-8-8-8z" fill="#3d6b42" filter="url(#s)"/>
+    <path d="M12 0C7.58 0 4 3.58 4 8c0 5.5 8 20 8 20s8-14.5 8-20c0-4.42-3.58-8-8-8z" fill="#d94e18" filter="url(#s)"/>
     <circle cx="12" cy="8.5" r="3.6" fill="white"/>
   </svg>`,
   className:  '',
