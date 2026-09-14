@@ -36,6 +36,22 @@ export const PLACES = [
     washi: 'rgba(170,140,200,0.62)',
   },
   {
+    id: 11,
+    title: '雨上がりの水たまり',
+    comment: { type: 'haiku', phrases: ['雨上がり', 'しゃがんで見れば', '空映る'] },
+    date: '2024.06.30',
+    location: '新宿区・新宿御苑',
+    tags: ['雨', '公園', '空'],
+    privacy: 'followers',
+    pos: [35.688, 139.713],
+    likes: 9,
+    photo: '/images/place_11.jpg',
+    photos: ['/images/place_11.jpg'],
+    bg: 'linear-gradient(145deg,#3a587a 0%,#5878a0 55%,#7898ba 100%)',
+    washi: 'rgba(88,120,160,0.55)',
+    // Photo: Tsuyoshi Kozu (@tsuyoshikozu) / Unsplash
+  },
+  {
     id: 3,
     title: '静かな裏道のカフェ',
     comment:
@@ -50,6 +66,22 @@ export const PLACES = [
     photos: ['/images/place_03.jpg', '/images/place_03b.jpg', '/images/place_03c.jpg'],
     bg: 'linear-gradient(145deg,#2e4a2e 0%,#3d6b3d 55%,#5a8a5a 100%)',
     washi: 'rgba(90,138,90,0.58)',
+  },
+  {
+    id: 9,
+    title: '朝露の蜘蛛の巣',
+    comment: { type: 'haiku', phrases: ['朝露の', '蜘蛛の巣光る', '路地の奥'] },
+    date: '2024.07.08',
+    location: '鎌倉市・扇ガ谷',
+    tags: ['朝', '路地', 'ひっそり'],
+    privacy: 'public',
+    pos: [35.328, 139.535],
+    likes: 14,
+    photo: '/images/place_09.jpg',
+    photos: ['/images/place_09.jpg'],
+    bg: 'linear-gradient(145deg,#7a8a9a 0%,#9aaaba 55%,#b8cad8 100%)',
+    washi: 'rgba(120,145,175,0.55)',
+    // Photo: Filipe Freitas (@filipephotographs) / Unsplash
   },
   {
     id: 4,
@@ -128,22 +160,6 @@ export const PLACES = [
     washi: 'rgba(160,130,70,0.55)',
   },
   {
-    id: 9,
-    title: '朝露の蜘蛛の巣',
-    comment: { type: 'haiku', phrases: ['朝露の', '蜘蛛の巣光る', '路地の奥'] },
-    date: '2024.07.08',
-    location: '鎌倉市・扇ガ谷',
-    tags: ['朝', '路地', 'ひっそり'],
-    privacy: 'public',
-    pos: [35.328, 139.535],
-    likes: 14,
-    photo: '/images/place_09.jpg',
-    photos: ['/images/place_09.jpg'],
-    bg: 'linear-gradient(145deg,#7a8a9a 0%,#9aaaba 55%,#b8cad8 100%)',
-    washi: 'rgba(120,145,175,0.55)',
-    // Photo: Filipe Freitas (@filipephotographs) / Unsplash
-  },
-  {
     id: 10,
     title: '石畳の秋',
     comment: { type: 'haiku', phrases: ['石畳', 'ひとり歩けば', '木の葉踏む'] },
@@ -158,22 +174,6 @@ export const PLACES = [
     bg: 'linear-gradient(145deg,#7a3820 0%,#9e5830 55%,#c07848 100%)',
     washi: 'rgba(158,88,48,0.58)',
     // Photo: George Nifakos (@gnifakos) / Unsplash
-  },
-  {
-    id: 11,
-    title: '雨上がりの水たまり',
-    comment: { type: 'haiku', phrases: ['雨上がり', 'しゃがんで見れば', '空映る'] },
-    date: '2024.06.30',
-    location: '新宿区・新宿御苑',
-    tags: ['雨', '公園', '空'],
-    privacy: 'followers',
-    pos: [35.688, 139.713],
-    likes: 9,
-    photo: '/images/place_11.jpg',
-    photos: ['/images/place_11.jpg'],
-    bg: 'linear-gradient(145deg,#3a587a 0%,#5878a0 55%,#7898ba 100%)',
-    washi: 'rgba(88,120,160,0.55)',
-    // Photo: Tsuyoshi Kozu (@tsuyoshikozu) / Unsplash
   },
   {
     id: 12,
