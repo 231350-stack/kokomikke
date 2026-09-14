@@ -260,9 +260,19 @@ export default function PlaceDetailPage() {
         </div>
 
         {/* コメント */}
-        <p style={{ fontSize: '14px', color: '#555', lineHeight: 1.85 }}>
-          {comment}
-        </p>
+        {result?.comment?.type === 'haiku' ? (
+          <div style={{ fontSize: '15px', color: '#555', lineHeight: 2.1,
+                        fontFamily: "'Hiragino Mincho ProN','YuMincho','Yu Mincho',Georgia,serif",
+                        letterSpacing: '0.06em' }}>
+            {result.comment.phrases.filter(Boolean).map((phrase, i) => (
+              <p key={i} style={{ margin: 0 }}>{phrase}</p>
+            ))}
+          </div>
+        ) : (
+          <p style={{ fontSize: '14px', color: '#555', lineHeight: 1.85 }}>
+            {comment}
+          </p>
+        )}
 
         {/* 公開範囲（自分の投稿のみ） */}
         {result?.isUserPost && result?.privacy && (
