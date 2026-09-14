@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom'
-import { Map, Quote, User } from 'lucide-react'
+import { Map, MessageCircle, User } from 'lucide-react'
 
 const tabs = [
-  { path: '/home',    label: '地図',         Icon: Map   },
-  { path: '/words',   label: '言葉',         Icon: Quote },
-  { path: '/profile', label: 'プロフィール', Icon: User  },
+  { path: '/home',    label: '地図',         Icon: Map           },
+  { path: '/words',   label: '言葉',         Icon: MessageCircle },
+  { path: '/profile', label: 'プロフィール', Icon: User          },
 ]
 
 export default function TabBar() {
