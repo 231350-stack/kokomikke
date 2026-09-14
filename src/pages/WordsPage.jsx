@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
+import { Search, ChevronRight } from 'lucide-react'
 import { PLACES } from '../data/places'
 import { getPosts, getCommentText } from '../utils/storage'
 
@@ -45,26 +46,74 @@ function CommentDisplay({ comment }) {
 
 export default function WordsPage() {
   const navigate  = useNavigate()
+  const [query, setQuery] = useState('')
+
   const allPosts  = [...getPosts(), ...PLACES]
+  const q = query.trim()
+  const filtered = q
+    ? allPosts.filter(post => getCommentText(post.comment).includes(q))
+    : allPosts
 
   return (
     <div style={{ minHeight: 'calc(100dvh - 60px - env(safe-area-inset-bottom, 0px))', backgroundColor: '#f5f0e8' }}>
 
-      {/* ヘッダー */}
+      {/* ヘッダー + 検索バー */}
       <div style={{ padding: '22px 20px 14px' }}>
         <h1 style={{
           fontSize:      '20px',
           fontWeight:    700,
           color:         '#1a1a1a',
           letterSpacing: '0.03em',
+          marginBottom:  '14px',
         }}>
           言葉から探す
         </h1>
+
+        {/* 検索バー */}
+        <div style={{
+          display:         'flex',
+          alignItems:      'center',
+          gap:             '8px',
+          backgroundColor: '#fff',
+          borderRadius:    '14px',
+          padding:         '10px 14px',
+          boxShadow:       '0 2px 8px rgba(0,0,0,0.07)',
+        }}>
+          <Search size={16} strokeWidth={2} style={{ color: '#7a9e7e', flexShrink: 0 }} />
+          <input
+            type="text"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="キーワードで絞り込む"
+            style={{
+              flex:       1,
+              border:     'none',
+              outline:    'none',
+              fontSize:   '14px',
+              color:      '#1a1a1a',
+              background: 'transparent',
+            }}
+          />
+          {q && (
+            <button
+              onClick={() => setQuery('')}
+              style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', lineHeight: 1, color: '#ccc' }}
+              aria-label="クリア"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {/* リスト */}
       <div style={{ backgroundColor: '#fff', borderRadius: '16px 16px 0 0' }}>
-        {allPosts.map((post, idx) => (
+        {filtered.length === 0 && (
+          <p style={{ padding: '40px 20px', textAlign: 'center', fontSize: '14px', color: '#bbb' }}>
+            該当する投稿が見つかりませんでした
+          </p>
+        )}
+        {filtered.map((post, idx) => (
           <div
             key={post.id}
             role="button"
@@ -74,7 +123,7 @@ export default function WordsPage() {
               alignItems:    'center',
               gap:           '12px',
               padding:       '16px 20px',
-              borderBottom:  idx < allPosts.length - 1 ? '1px solid rgba(0,0,0,0.07)' : 'none',
+              borderBottom:  idx < filtered.length - 1 ? '1px solid rgba(0,0,0,0.07)' : 'none',
               cursor:        'pointer',
             }}
           >
