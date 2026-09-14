@@ -12,6 +12,7 @@ import SearchPage from './pages/SearchPage'
 import SearchResultsPage from './pages/SearchResultsPage'
 import PlaceDetailPage from './pages/PlaceDetailPage'
 import DirectionsPage from './pages/DirectionsPage'
+import WordsPage from './pages/WordsPage'
 
 /** タブバーあり（メイン画面） */
 function MainLayout() {
@@ -68,6 +69,7 @@ function App() {
           <Route path="/map" element={<Navigate to="/home" replace />} />
           <Route path="/search-results" element={<SearchResultsPage />} />
           <Route path="/encyclopedia" element={<Encyclopedia />} />
+          <Route path="/words" element={<WordsPage />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
