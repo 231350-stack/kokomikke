@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ChevronLeft, Heart, Bookmark, Trash2 } from 'lucide-react'
-import { isLiked, toggleLike, deletePost } from '../utils/storage'
+import { isLiked, toggleLike, deletePost, getCommentText } from '../utils/storage'
 
 export default function PlaceDetailPage() {
   const navigate = useNavigate()
@@ -22,7 +22,7 @@ export default function PlaceDetailPage() {
   const likeCount = liked ? baseCount + 1 : baseCount
 
   const tags    = result?.tags    ?? ['海', '坂道', '絶景']
-  const comment = result?.comment ?? 'ふと振り返ると、海がきらっと見える坂道。風が気持ちよくて、つい深呼吸したくなる場所でした。'
+  const comment = getCommentText(result?.comment) || 'ふと振り返ると、海がきらっと見える坂道。風が気持ちよくて、つい深呼吸したくなる場所でした。'
   const photoBg = result?.bg ?? 'linear-gradient(170deg,#c8d8e2 0%,#9abfce 28%,#6a9fb8 55%,#7aafca 80%,#8dc0d2 100%)'
 
   /* ── 写真カルーセル ── */

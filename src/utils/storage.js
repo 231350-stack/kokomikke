@@ -1,6 +1,25 @@
 const KEY       = 'kokomikke_posts'
 const LIKES_KEY = 'kokomikke_likes_v2'
 
+/**
+ * comment フィールドを表示用の一文字列に変換する。
+ *
+ * comment の形式は以下のいずれか：
+ *   - string                          … 自由入力の一言（既存データも含む）
+ *   - { type: 'free',  text: string } … 自由入力（新形式）
+ *   - { type: 'haiku', phrases: [string, string, string] } … 5・7・5
+ *
+ * @param {string | { type: string, text?: string, phrases?: string[] } | null | undefined} comment
+ * @returns {string}
+ */
+export function getCommentText(comment) {
+  if (!comment) return ''
+  if (typeof comment === 'string') return comment
+  if (comment.type === 'haiku') return (comment.phrases ?? []).filter(Boolean).join('')
+  if (comment.type === 'free')  return comment.text ?? ''
+  return ''
+}
+
 /* 動作確認用：初回アクセス時にデフォルトでいいね済みにするID（OTHER_POSTS のみ） */
 const DEFAULT_LIKES = [101, 102, 103]
 
@@ -44,9 +63,10 @@ export function savePost({ photos, comment, tags, privacy }) {
   const now = new Date()
   const date = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`
   const photoList = Array.isArray(photos) ? photos.filter(Boolean) : []
+  const commentText = getCommentText(comment)
   const post = {
     id:       Date.now(),
-    title:    comment?.trim() || '新しい発見',
+    title:    commentText.trim() || '新しい発見',
     comment:  comment ?? '',
     date,
     location: '現在地',

@@ -32,13 +32,21 @@ function compressImage(file) {
   })
 }
 
+const HAIKU_ROWS = [
+  { placeholder: '夕暮れの',   hint: '5' },
+  { placeholder: '川面に光る', hint: '7' },
+  { placeholder: '橋の上',    hint: '5' },
+]
+
 export default function PostPage() {
   const navigate = useNavigate()
   const { state } = useLocation()
   const initialPhoto = state?.photo
 
   const [photos, setPhotos]             = useState(initialPhoto ? [initialPhoto] : [])
-  const [comment, setComment]           = useState('')
+  const [commentMode, setCommentMode]   = useState('haiku')          // 'haiku' | 'free'
+  const [phrases, setPhrases]           = useState(['', '', ''])     // 5・7・5 の各フレーズ
+  const [freeText, setFreeText]         = useState('')               // 自由入力
   const [selectedTags, setSelectedTags] = useState([])
   const [privacy, setPrivacy]           = useState('private')
 
@@ -61,8 +69,12 @@ export default function PostPage() {
   const removePhoto = (idx) =>
     setPhotos(prev => prev.filter((_, i) => i !== idx))
 
-  const handleSave = () =>
+  const handleSave = () => {
+    const comment = commentMode === 'haiku'
+      ? { type: 'haiku', phrases }
+      : { type: 'free', text: freeText }
     navigate('/saved', { state: { photos, comment, selectedTags, privacy } })
+  }
 
   return (
     <div className="flex flex-col min-h-dvh">
@@ -152,13 +164,77 @@ export default function PostPage() {
 
         {/* コメント入力 */}
         <div className="mb-6">
-          <input
-            type="text"
-            placeholder="一言コメントを入力"
-            value={comment}
-            onChange={e => setComment(e.target.value)}
-            className="w-full px-4 py-4 bg-white rounded-2xl text-sm text-gray-800 placeholder-gray-400 outline-none"
-          />
+
+          {/* モード切替 */}
+          <div style={{
+            display:         'flex',
+            backgroundColor: '#ede9e0',
+            borderRadius:    '12px',
+            padding:         '3px',
+            marginBottom:    '10px',
+          }}>
+            {[
+              { id: 'haiku', label: '5・7・5で書く' },
+              { id: 'free',  label: '自由に書く' },
+            ].map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => setCommentMode(id)}
+                style={{
+                  flex:            1,
+                  padding:         '8px 0',
+                  borderRadius:    '10px',
+                  border:          'none',
+                  fontSize:        '13px',
+                  fontWeight:      600,
+                  cursor:          'pointer',
+                  backgroundColor: commentMode === id ? '#fff' : 'transparent',
+                  color:           commentMode === id ? '#496a4c' : '#aaa',
+                  boxShadow:       commentMode === id ? '0 1px 4px rgba(0,0,0,0.10)' : 'none',
+                  transition:      'background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease',
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* 入力エリア */}
+          {commentMode === 'haiku' ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {HAIKU_ROWS.map(({ placeholder, hint }, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <input
+                    type="text"
+                    placeholder={placeholder}
+                    value={phrases[idx]}
+                    onChange={e => setPhrases(prev => prev.map((p, i) => i === idx ? e.target.value : p))}
+                    style={{
+                      flex:            1,
+                      padding:         '14px 16px',
+                      backgroundColor: '#fff',
+                      borderRadius:    '14px',
+                      border:          'none',
+                      fontSize:        '14px',
+                      color:           '#1a1a1a',
+                      outline:         'none',
+                    }}
+                  />
+                  <span style={{ fontSize: '11px', color: '#ccc', flexShrink: 0, width: '16px', textAlign: 'right' }}>
+                    {hint}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <input
+              type="text"
+              placeholder="一言コメントを入力"
+              value={freeText}
+              onChange={e => setFreeText(e.target.value)}
+              className="w-full px-4 py-4 bg-white rounded-2xl text-sm text-gray-800 placeholder-gray-400 outline-none"
+            />
+          )}
         </div>
 
         {/* タグを選ぶ */}
