@@ -137,9 +137,11 @@ export const PLACES = [
     privacy: 'public',
     pos: [35.328, 139.535],
     likes: 14,
-    photo: null,
+    photo: '/images/place_09.jpg',
+    photos: ['/images/place_09.jpg'],
     bg: 'linear-gradient(145deg,#7a8a9a 0%,#9aaaba 55%,#b8cad8 100%)',
     washi: 'rgba(120,145,175,0.55)',
+    // Photo: Filipe Freitas (@filipephotographs) / Unsplash
   },
   {
     id: 10,
@@ -151,9 +153,11 @@ export const PLACES = [
     privacy: 'public',
     pos: [35.339, 139.538],
     likes: 22,
-    photo: null,
+    photo: '/images/place_10.jpg',
+    photos: ['/images/place_10.jpg'],
     bg: 'linear-gradient(145deg,#7a3820 0%,#9e5830 55%,#c07848 100%)',
     washi: 'rgba(158,88,48,0.58)',
+    // Photo: George Nifakos (@gnifakos) / Unsplash
   },
   {
     id: 11,
@@ -165,9 +169,11 @@ export const PLACES = [
     privacy: 'followers',
     pos: [35.688, 139.713],
     likes: 9,
-    photo: null,
+    photo: '/images/place_11.jpg',
+    photos: ['/images/place_11.jpg'],
     bg: 'linear-gradient(145deg,#3a587a 0%,#5878a0 55%,#7898ba 100%)',
     washi: 'rgba(88,120,160,0.55)',
+    // Photo: Tsuyoshi Kozu (@tsuyoshikozu) / Unsplash
   },
   {
     id: 12,
@@ -179,8 +185,10 @@ export const PLACES = [
     privacy: 'public',
     pos: [35.332, 139.545],
     likes: 18,
-    photo: null,
+    photo: '/images/place_12.jpg',
+    photos: ['/images/place_12.jpg'],
     bg: 'linear-gradient(145deg,#3a6050 0%,#5a8070 55%,#7aa090 100%)',
     washi: 'rgba(90,128,112,0.55)',
+    // Photo: Gaku Suyama (@gakusuyama) / Unsplash
   },
 ]
