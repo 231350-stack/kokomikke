@@ -5,7 +5,7 @@ import { OTHER_POSTS } from '../data/otherPosts'
 import { getPosts, getLikes } from '../utils/storage'
 
 /* ─────────────────────────────────────────────
-   ポラロイド写真が重なった図鑑エントリービジュアル
+   ポラロイド写真が重なったアルバムエントリービジュアル
 ───────────────────────────────────────────── */
 function PhotoStack({ entries, spotCount, onPress }) {
   const [pressed, setPressed] = useState(false)
@@ -36,7 +36,7 @@ function PhotoStack({ entries, spotCount, onPress }) {
       onTouchStart={() => setPressed(true)}
       onTouchEnd={() => setPressed(false)}
       role="button"
-      aria-label="図鑑を開く"
+      aria-label="アルバムを開く"
       style={{
         cursor:     'pointer',
         transform:  pressed ? 'scale(0.96)' : 'scale(1)',
@@ -189,7 +189,7 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* ── 図鑑セクション ── */}
+      {/* ── アルバムセクション ── */}
       <div style={{ padding: '20px 16px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <div style={{
           width:           '4px',
@@ -205,7 +205,7 @@ export default function Profile() {
           letterSpacing: '0.04em',
           margin:        0,
         }}>
-          図鑑
+          アルバム
         </p>
       </div>
 

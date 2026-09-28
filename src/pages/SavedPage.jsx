@@ -93,7 +93,7 @@ export default function SavedPage() {
           onClick={() => navigate('/encyclopedia')}
           className="w-full py-4 bg-sage-400 text-white rounded-full text-base font-medium"
         >
-          図鑑を開く
+          アルバムを開く
         </button>
         <button
           onClick={() => navigate('/home')}
