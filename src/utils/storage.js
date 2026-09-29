@@ -1,5 +1,5 @@
 const KEY       = 'kokomikke_posts'
-const LIKES_KEY = 'kokomikke_likes_v2'
+const LIKES_KEY = 'kokomikke_likes_v3'
 
 /**
  * comment フィールドを表示用の一文字列に変換する。
@@ -21,7 +21,7 @@ export function getCommentText(comment) {
 }
 
 /* 動作確認用：初回アクセス時にデフォルトでいいね済みにするID（OTHER_POSTS のみ） */
-const DEFAULT_LIKES = [101, 102, 103]
+const DEFAULT_LIKES = [101, 102, 103, 104, 105]
 
 export function getLikes() {
   if (localStorage.getItem(LIKES_KEY) === null) {
