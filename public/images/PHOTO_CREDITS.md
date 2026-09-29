@@ -15,3 +15,5 @@ Unsplash: https://unsplash.com/license / Pexels: https://www.pexels.com/license/
 | place_07.jpg | 竹林の抜け道 | Fynn Geerdsen | https://unsplash.com/photos/SLbdSTZBx6M |
 | place_08.jpg | 光の差す境内 | PJH | https://unsplash.com/photos/oHHI0BsA5ro |
 | place_11.jpg | 雨上がりの水たまり | Matt Hoffman | https://unsplash.com/photos/photo-1560782202-154b39d57ef2 |
+| other_04.jpg | 雪残る林の道 | ayumi kubo | https://unsplash.com/photos/a-snow-covered-path-through-a-forest-with-lots-of-trees-oKHau3clcls |
+| other_05.jpg | 夕暮れの田んぼ | Dennis Peterson | https://unsplash.com/photos/a-field-of-green-grass-C7HGPzPFPhE |
